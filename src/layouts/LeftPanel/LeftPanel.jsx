@@ -1,8 +1,10 @@
 import styles from './LeftPanel.module.css';
 
-function LeftPanel() {
+function LeftPanel({ children }) {
 	return (
-		<div className={styles.left__panel}></div>
+		<div className={styles.left__panel}>
+			{children}
+		</div>
 	);
 }
 

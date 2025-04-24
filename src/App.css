@@ -2,5 +2,18 @@
   width: 100vw;
   height: 100vh;
   display: flex;
+  gap: 5%;
+  overflow: hidden;
+  
+  font-family: "Fira Sans", sans-serif;
   background: linear-gradient(227deg, #fde2de 0%, #9caaea 100%);
+}
+
+button:hover,
+button:focus,
+button:active {
+  border: none;
+  outline: none;
+  border: none;
+  cursor: pointer;
 }

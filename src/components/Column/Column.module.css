@@ -1,0 +1,33 @@
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    min-width: 230px;
+}
+
+.column__title {
+    border-radius: 8px;
+    font-weight: 400;
+    font-size: 16px;
+    color: #fff;
+    display: inline-block;
+    text-align: center;
+    padding: 2px 10px 2px 10px;
+}
+
+.backlog {
+    background-color: #8646c1;
+}
+
+.todo {
+    background-color: #908799;
+}
+
+.progress {
+    background-color: #E79690;
+}
+
+.completed {
+    background-color: #74B97C;
+}

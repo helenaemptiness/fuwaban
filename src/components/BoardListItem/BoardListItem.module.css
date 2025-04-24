@@ -1,0 +1,29 @@
+.list__item {
+    font-weight: 400;
+    font-size: 16px;
+    color: #4b4b4b;
+
+    border-radius: 8px;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.53);
+    background: #fff;
+    padding: 6px 9px 6px 9px;
+    min-width: 300px;
+    text-align: start;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.list__item:hover {
+    background: #cab4de;
+    color: #8646c1;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.732);
+}
+
+.list__item:active,
+.current__item /*for current kanban board*/
+{
+    color: #fff;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.53);
+    background: #8646c1;
+}

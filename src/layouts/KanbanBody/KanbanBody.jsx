@@ -1,8 +1,10 @@
 import styles from './KanbanBody.module.css';
 
-function KanbanBody() {
+function KanbanBody({ children }) {
 	return (
-		<div className={styles.kanban__body}></div>
+		<div className={styles.kanban__body}>
+			{children}
+		</div>
 	);
 }
 

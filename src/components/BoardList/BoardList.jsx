@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import styles from './BoardList.module.css';
 
 function BoardList({ children }) {
+
     return (
         <div className={styles.board__list}>
             {children}

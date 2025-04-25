@@ -1,9 +1,9 @@
 import styles from './NewItemButton.module.css';
 
-function NewItemButton({ color }) {
+function NewItemButton({ color, onClick }) {
 
     return (
-        <button className={styles.item__button}>
+        <button className={styles.item__button} onClick={onClick}>
             <svg width="44" 
             height="44" 
             viewBox="0 0 44 44" 

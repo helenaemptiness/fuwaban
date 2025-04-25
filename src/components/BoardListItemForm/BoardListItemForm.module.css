@@ -1,0 +1,14 @@
+.item__form {
+
+}
+.input {
+    font-weight: 400;
+    font-size: 16px;
+    color: inherit;
+    background: transparent;
+    border: none;
+    outline: none;
+}
+.input::placeholder {
+    color: #908799;
+}

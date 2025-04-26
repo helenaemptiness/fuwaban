@@ -18,24 +18,11 @@ import BoardListItemForm from './components/BoardListItemForm/BoardListItemForm'
 
 function App() {
   const buttonColors = ["#8646c1", "#908799", "#E79690", "#74B97C"] //interafsce&backlog, to-do, in-progress, completed
-  const columnTitles = ['Нет статуса', 'Запланировано', 'В процессе', 'Завершено']
-  const columnClasses = ['backlog','todo', 'progress', 'completed'];
+  
 
-  const cards = [
-    {
-      task: 'Задача 1',
-      deadline: 'до 12.06.2025',
-    },
-    {
-      task: 'Задача 2',
-      deadline: 'до 24.07.2025',
-    },
-    {
-      task: 'Задача 3',
-      deadline: 'без срока',
-    },
-  ]
+
   const [isAddingBoard, setIsAddingBoard] = useState(false);
+  const [activeBoardId, setActiveBoardId] = useState(null);
   
   const openBoardItemForm = () => {
     setIsAddingBoard(true);
@@ -53,6 +40,10 @@ function App() {
     setIsAddingBoard(false)
   };
 
+  const activateBoard = (boardId) => {
+    setActiveBoardId(boardId);
+  }
+
   return (
     <div className="app">
       <LeftPanel>
@@ -68,7 +59,12 @@ function App() {
             {boards
               .sort((a, b) => b.id - a.id)
               .map(board => (
-                  <BoardListItem key={board.id} title={board.title} />
+                  <BoardListItem 
+                    key={board.id} 
+                    title={board.title} 
+                    isActive={activeBoardId === board.id}
+                    onBoardClick={() => activateBoard(board.id)}
+                  />
             ))}
             
           </BoardList>
@@ -76,20 +72,28 @@ function App() {
       </LeftPanel>
       <KanbanBody>
         <ColumnWrapper>
-            <Column title={columnTitles[0]} color={columnClasses[0]} >
-              <TaskCard task={cards[2].task} deadline={cards[2].deadline}/>
-              <NewItemButton color={buttonColors[0]}/>
-            </Column>
-            <Column title={columnTitles[1]} color={columnClasses[1]} >
-              <TaskCard task={cards[0].task} deadline={cards[0].deadline}/>
-              <NewItemButton color={buttonColors[1]}/>
-            </Column>
-            <Column title={columnTitles[2]} color={columnClasses[2]} >
-              <NewItemButton color={buttonColors[2]}/>
-            </Column>
-            <Column title={columnTitles[3]} color={columnClasses[3]} >
-              <NewItemButton color={buttonColors[3]}/>
-            </Column>
+        {boards
+              .filter(board => board.id === activeBoardId)
+              .map(board => (
+                  board.columns.map(column => (
+                    <Column 
+                      key={column.id}
+                      title={column.title}
+                      type={column.type}
+                      tasks={column.tasks}
+                      color={column.type}
+                    >
+                      {column.tasks.map(task => (
+                        <TaskCard 
+                          key={task.id}
+                          task={task.text}
+                          deadline={task.deadline}
+                        />
+                      ))}
+                      <NewItemButton color={column.color}/>
+                    </Column>
+                  ))
+            ))}
         </ColumnWrapper>
       </KanbanBody>
 

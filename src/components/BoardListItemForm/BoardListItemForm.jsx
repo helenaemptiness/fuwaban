@@ -14,7 +14,36 @@ function BoardListItemForm({ onAddBoard }) {
         const newBoard = {
             id: Date.now(),
             title: boardTitle,
-            columns: []
+            columns: [
+                {
+                    id: 1,
+                    title: "Нет статуса",
+                    type: "backlog",
+                    color: "#8646c1",
+                    tasks: []
+                },
+                {
+                    id: 2,
+                    title: "Запланировано",
+                    type: "todo",
+                    color: "#908799",
+                    tasks: []
+                },
+                {
+                    id: 3,
+                    title: "В процессе",
+                    type: "progress",
+                    color: "#E79690",
+                    tasks: []
+                },
+                {
+                    id: 4,
+                    title: "Завершено",
+                    type: "completed",
+                    color: "#74B97C",
+                    tasks: []
+                }
+            ]
         };
 
         const updatedBoards = [...existingBoards, newBoard];

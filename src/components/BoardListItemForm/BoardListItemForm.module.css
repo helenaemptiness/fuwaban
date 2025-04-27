@@ -1,5 +1,6 @@
 .item__form {
-
+    display: flex;
+    gap: 10px;
 }
 .input {
     font-weight: 400;
@@ -8,6 +9,7 @@
     background: transparent;
     border: none;
     outline: none;
+    width: 100%
 }
 .input::placeholder {
     color: #908799;

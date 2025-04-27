@@ -9,8 +9,10 @@
   background: linear-gradient(227deg, #fde2de 0%, #9caaea 100%);
 }
 
+button,
 button:hover,
 button:focus,
+button:focus-visible,
 button:active {
   border: none;
   outline: none;

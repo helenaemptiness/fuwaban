@@ -26,7 +26,6 @@ function App() {
   
   const openBoardItemForm = () => {
     setIsAddingBoard(true);
-    console.log('click');
   };
 
   const [boards, setBoards] = useState([]);
@@ -37,10 +36,14 @@ function App() {
 
   const addNewBoardItem = (newBoard) => {
     setBoards(existingBoards => [...existingBoards, newBoard]);
+    setActiveBoardId(newBoard.id)
     setIsAddingBoard(false)
   };
 
   const activateBoard = (boardId) => {
+    if (isAddingBoard) {
+      setIsAddingBoard(false)
+    }
     setActiveBoardId(boardId);
   }
 
@@ -52,7 +55,7 @@ function App() {
           <NewItemButton onClick={openBoardItemForm} color={buttonColors[0]}/>
           <BoardList>
             {isAddingBoard && (
-              <BoardListItem>
+              <BoardListItem isForm={true}>
                 <BoardListItemForm onAddBoard={addNewBoardItem}/>
               </BoardListItem>
             )}

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './BoardListItemForm.module.css';
+import Button from '../Button/Button';
 
 
 function BoardListItemForm({ onAddBoard }) {
@@ -60,6 +61,7 @@ function BoardListItemForm({ onAddBoard }) {
             type="text" value={boardTitle}
             onChange={(e) => setBoardTitle(e.target.value)}
             placeholder="Новая доска"/>
+            <Button type="submit" name="ОК"/>
         </form>
     );
 }

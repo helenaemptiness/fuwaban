@@ -33,3 +33,14 @@
     color: #fff;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.732);
 }
+
+.form__item {
+    border: 1px solid #8646c1;
+}
+
+.form__item:hover,
+.form__item:active {
+    background: #fff;
+    color: #4b4b4b;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.732);
+}

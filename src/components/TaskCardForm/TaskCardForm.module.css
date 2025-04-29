@@ -1,0 +1,68 @@
+.card__form {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    padding: 1px;
+}
+.form__span {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+}
+
+.form__div {
+    display: flex;
+    gap: 8px;
+}
+.input {
+    border: 1px solid #c6c6c6;
+    border-radius: 4px;
+    height: 18px;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
+    background: #fff;
+    outline: none;
+}
+.input::placeholder {
+    color: #908799;
+    font-size: 14px;
+}
+.input:active,
+.input:focus {
+    border: 1px solid #8646c1;
+    border-radius: 4px;
+    outline: none;
+}
+
+.label__date {
+    font-size: 14px;
+    color: #908799;
+    line-height: 1; 
+}
+
+.label__checkbox {
+    font-size: 14px;
+    line-height: 1; 
+}
+
+input[type="date"] {
+    border: none;
+    width: 6.7em;
+    font-size: 14px;
+    height: 14px;
+    color: #000;
+    outline: none;
+}
+
+input[type="checkbox"] {
+    accent-color: #8646c1;
+    height: 14px;
+    width: 14px;
+    border-radius: 0px;
+    margin: 0;
+}
+
+.card__form > button {
+    margin-left: auto; /* Прижимает кнопку вправо */
+    margin-top: auto; 
+}

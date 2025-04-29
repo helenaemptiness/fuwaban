@@ -13,13 +13,19 @@ import ColumnWrapper from './components/ColumnWrapper/ColumnWrapper';
 import Column from './components/Column/Column';
 import TaskCard from './components/TaskCard/TaskCard';
 import BoardListItemForm from './components/BoardListItemForm/BoardListItemForm';
+import TaskCardForm from './components/TaskCardForm/TaskCardForm';
 
 
 
 function App() {
   const buttonColors = ["#8646c1", "#908799", "#E79690", "#74B97C"] //interafsce&backlog, to-do, in-progress, completed
-  
+  const [activeColumnId, setActiveColumnId] = useState(null);
+  const [isAddingTask, setIsAddingTask] = useState(false)
 
+  const openTaskForm = (columnId) => {
+    setActiveColumnId(columnId);
+    setIsAddingTask(true);
+  };
 
   const [isAddingBoard, setIsAddingBoard] = useState(false);
   const [activeBoardId, setActiveBoardId] = useState(null);
@@ -93,7 +99,12 @@ function App() {
                           deadline={task.deadline}
                         />
                       ))}
-                      <NewItemButton color={column.color}/>
+                      <NewItemButton color={column.color} onClick={() => openTaskForm(column.id)}/>
+                      {isAddingTask && activeColumnId === column.id && (
+                        <TaskCard>
+                          <TaskCardForm/>
+                        </TaskCard>
+                      )}
                     </Column>
                   ))
             ))}

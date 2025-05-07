@@ -1,4 +1,5 @@
 .kanban__body {
     display: flex;
     height: 100vh;
+    position: sticky;
 }

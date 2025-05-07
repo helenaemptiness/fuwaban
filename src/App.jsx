@@ -53,6 +53,30 @@ function App() {
     setActiveBoardId(boardId);
   }
 
+  const addTaskToColumn = (columnId, newTask) => {
+    setBoards(existingBoards => {
+      const updatedBoards = existingBoards.map(board => {
+        if (board.id === activeBoardId) {
+          return {
+            ...board,
+            columns: board.columns.map(column => {
+              if (column.id === columnId) {
+                return {
+                  ...column,
+                  tasks: [...column.tasks, newTask]
+                };
+              }
+              return column;
+            })
+          };
+        }
+        return board;
+      });
+      localStorage.setItem('boards', JSON.stringify(updatedBoards));
+      return updatedBoards;
+    });
+  };
+
   return (
     <div className="app">
       <LeftPanel>
@@ -92,6 +116,15 @@ function App() {
                       tasks={column.tasks}
                       color={column.type}
                     >
+                      <NewItemButton color={column.color} onClick={() => openTaskForm(column.id)}/>
+                      {isAddingTask && activeColumnId === column.id && (
+                        <TaskCard onClose={() => setIsAddingTask(false)}>
+                            <TaskCardForm 
+                                onClose={() => setIsAddingTask(false)}
+                                onSubmit={(taskData) => addTaskToColumn(column.id, taskData)}
+                            />
+                        </TaskCard>
+                      )}
                       {column.tasks.map(task => (
                         <TaskCard 
                           key={task.id}
@@ -99,12 +132,7 @@ function App() {
                           deadline={task.deadline}
                         />
                       ))}
-                      <NewItemButton color={column.color} onClick={() => openTaskForm(column.id)}/>
-                      {isAddingTask && activeColumnId === column.id && (
-                        <TaskCard>
-                          <TaskCardForm/>
-                        </TaskCard>
-                      )}
+                      
                     </Column>
                   ))
             ))}

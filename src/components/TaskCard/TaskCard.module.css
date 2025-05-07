@@ -9,6 +9,16 @@
     gap: 2px;
 
     width: 210px;
+
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.card.closing {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
 }
 
 .title {

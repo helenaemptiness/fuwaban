@@ -4,6 +4,7 @@
     gap: 4px;
     position: relative;
     padding: 1px;
+    
 }
 .form__span {
     display: flex;
@@ -15,6 +16,13 @@
     display: flex;
     gap: 8px;
 }
+
+.form__buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
 .input {
     border: 1px solid #c6c6c6;
     border-radius: 4px;

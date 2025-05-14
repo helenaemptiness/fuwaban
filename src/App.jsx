@@ -125,7 +125,9 @@ function App() {
                             />
                         </TaskCard>
                       )}
-                      {column.tasks.map(task => (
+                      {column.tasks
+                      .sort((a, b) => b.id - a.id)
+                      .map(task => (
                         <TaskCard 
                           key={task.id}
                           task={task.text}

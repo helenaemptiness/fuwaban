@@ -57,7 +57,9 @@ function BoardListItemForm({ onAddBoard }) {
     }
     return (
         <form className={styles.item__form} onSubmit={addBoardItem}>
-            <input className={styles.input}
+            <input 
+            autoFocus
+            className={styles.input}
             type="text" value={boardTitle}
             onChange={(e) => setBoardTitle(e.target.value)}
             placeholder="Новая доска"/>

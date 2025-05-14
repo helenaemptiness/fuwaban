@@ -1,4 +1,6 @@
 .item__button {
+    flex-shrink: 0;
+    
     background-color: transparent;
     stroke-width: 4px;
     display: inline-block;

@@ -1,5 +1,8 @@
 .kanban__body {
     display: flex;
     height: 100vh;
-    position: sticky;
+    flex: 1;
+    overflow-y: auto;
+
+    
 }

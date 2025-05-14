@@ -4,4 +4,11 @@
     flex-direction: column;
     gap: 10px;
     background-color: #fff;
+
+    height: 100vh;
+
+    position: sticky;
+    overflow-y: hidden; 
+    left: 0;
+    top: 0;
 }

@@ -2,4 +2,6 @@
     min-height: 200px;
     background-color: #fff;
     border-bottom: 2px solid #c6c6c6;
+
+    flex-shrink: 0;
 }

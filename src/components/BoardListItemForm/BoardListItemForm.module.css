@@ -1,6 +1,7 @@
 .item__form {
     display: flex;
     gap: 10px;
+    width: 100%;
 }
 .input {
     font-weight: 400;

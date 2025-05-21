@@ -1,7 +1,9 @@
+import DeleteButton from '../DeleteButton/DeleteButton';
+import EditButton from '../EditButton/EditButton';
 import styles from './BoardListItem.module.css';
 
 
-function BoardListItem({ title, onBoardClick, children, isActive, isForm }) {
+function BoardListItem({ title, onBoardClick, children, isActive, isForm = false, onEditClick, id }) {
 
 
     const clickBoard = () => {
@@ -9,7 +11,7 @@ function BoardListItem({ title, onBoardClick, children, isActive, isForm }) {
             onBoardClick()
         }
     };
-
+    {console.log(isForm)}
     return (
         
         <div 
@@ -21,6 +23,17 @@ function BoardListItem({ title, onBoardClick, children, isActive, isForm }) {
             onClick={clickBoard}
         >
             {title}
+            {!isForm && isActive && (
+                
+            <div className={styles.item__instruments}>
+                <EditButton onClick={() => console.log('ok')
+                }/>
+                <DeleteButton onClick={() => console.log('ok')
+                }/>
+            </div>
+            
+            )}
+            
             {children}
         </div>
     );

@@ -1,9 +1,11 @@
 .card__form {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 10px;
     position: relative;
-    padding: 1px;
+    padding: px;
+
+    font-size: 16px;
     
 }
 .form__span {
@@ -30,6 +32,7 @@
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
     background: #fff;
     outline: none;
+    padding: 4px;
 }
 .input::placeholder {
     color: #908799;
@@ -62,6 +65,10 @@ input[type="date"] {
     outline: none;
 }
 
+input[type="date"]:disabled {
+    color: #908799;
+}
+
 input[type="checkbox"] {
     accent-color: #8646c1;
     height: 14px;
@@ -70,7 +77,3 @@ input[type="checkbox"] {
     margin: 0;
 }
 
-.card__form > button {
-    margin-left: auto; /* Прижимает кнопку вправо */
-    margin-top: auto; 
-}

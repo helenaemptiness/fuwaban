@@ -21,6 +21,7 @@ function App() {
   const buttonColors = ["#8646c1", "#908799", "#E79690", "#74B97C"] //interafsce&backlog, to-do, in-progress, completed
   const [activeColumnId, setActiveColumnId] = useState(null);
   const [isAddingTask, setIsAddingTask] = useState(false)
+  
 
   const openTaskForm = (columnId) => {
     setActiveColumnId(columnId);
@@ -118,7 +119,12 @@ function App() {
                     >
                       <NewItemButton color={column.color} onClick={() => openTaskForm(column.id)}/>
                       {isAddingTask && activeColumnId === column.id && (
-                        <TaskCard onClose={() => setIsAddingTask(false)}>
+                        <TaskCard 
+                        isFormTask={true}
+                        onClose={() => {
+                          setIsAddingTask(false)
+                          setIsFormTask(false)
+                        }}>
                             <TaskCardForm 
                                 onClose={() => setIsAddingTask(false)}
                                 onSubmit={(taskData) => addTaskToColumn(column.id, taskData)}
@@ -132,6 +138,7 @@ function App() {
                           key={task.id}
                           task={task.text}
                           deadline={task.deadline}
+                          isAddingTask={isAddingTask}
                         />
                       ))}
                       

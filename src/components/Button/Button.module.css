@@ -1,9 +1,10 @@
 .button {
     border-radius: 4px;
     font-weight: 400;
-    font-size: 10px;
+    font-size: 14px;
     color: #fff;
     background: #8646c1;
-    padding: 3px;
+    padding: 6px;
     margin: 0;
+
 }

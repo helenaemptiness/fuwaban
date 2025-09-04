@@ -1,12 +1,10 @@
 import { useRef, useEffect, useState } from 'react';
 import styles from './TaskCard.module.css';
 
-function TaskCard({ task, deadline, children, onClose }) {
+function TaskCard({ task, deadline, children, onClose, isAddingTask, isFormTask }) {
     const cardRef = useRef(null)
     const [isClosing, setIsClosing] = useState(false);
-    const formattedDeadline = deadline 
-    ? new Date(deadline).toLocaleDateString('ru-RU') 
-    : 'Без срока';
+    const formattedDeadline = deadline ? new Date(deadline).toLocaleDateString('ru-RU') : 'Без срока';
 
     useEffect(() => {
         if (!children || !onClose) return;
@@ -27,12 +25,12 @@ function TaskCard({ task, deadline, children, onClose }) {
         setIsClosing(true);
         setTimeout(() => {
             onClose();
-        }, 200); // Должно совпадать с длительностью анимации
+        }, 360); // Должно совпадать с длительностью анимации
     };
 
     return (
         <div 
-        className={`${styles.card} ${isClosing ? styles.closing : ''}`}
+        className={`${styles.card} ${isClosing ? styles.closing : ''} ${isAddingTask ? styles.moving : ''} ${isFormTask ? styles.open : ''}`}
         ref={cardRef}>
             <span className={styles.title}>{task}</span>
             {children}

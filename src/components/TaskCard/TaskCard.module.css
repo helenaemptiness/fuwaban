@@ -2,23 +2,40 @@
     border-radius: 8px;
     box-shadow: 0 0 6px 0 #908799;
     background: #fff;
-    padding: 8px 6px 2px 6px;
+    padding: 8px;
 
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
 
     width: 210px;
 
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.4s ease, transform 0.4s ease;
     opacity: 1;
-    transform: scale(1);
 }
 
 .card.closing {
     opacity: 0;
     transform: scale(0.95);
     pointer-events: none;
+}
+.card.moving {
+    transform: translateY(4px);
+    opacity: 0.6;
+}
+.card.open {
+    animation: slideDown 0.3s ease-out
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .title {

@@ -1,9 +1,14 @@
 import styles from './Button.module.css';
 import cn from 'classnames';
 
-function Button({ name }) {
+function Button({ name, type, onClick }) {
     return (
-        <button className={styles.button}>{name}</button>
+        <button 
+        type={type}
+        className={styles.button}
+        onClick={onClick}>
+            {name}
+        </button>
     );
 }
 

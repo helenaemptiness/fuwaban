@@ -1,9 +1,10 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import Button from '../Button/Button';
 import styles from './TaskCardForm.module.css';
 import { INITIAL_STATE, formReducer, validateInput } from "./TaskCardForm.state"
 function TaskCardForm({ onSubmit, onClose }) {
     const [state, dispatch] = useReducer(formReducer, INITIAL_STATE);
+
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -55,6 +56,10 @@ function TaskCardForm({ onSubmit, onClose }) {
         onClose();
     }
 
+    const handleReset = () => {
+        dispatch({ type: 'RESET' });
+    }
+
     return (
         <form className={styles.card__form} onSubmit={handleSubmit}>
             <input className={styles.input} type="text" name="task" placeholder='Новая задача'
@@ -76,7 +81,11 @@ function TaskCardForm({ onSubmit, onClose }) {
                 </span>
             </div>
             <div className={styles.form__buttons}>
-                <Button type="button" name="Отмена" onClick={onClose}/>
+                <Button 
+                    type="button" 
+                    name="Очистить" 
+                    onClick={handleReset}
+                />
                 <Button type="submit" name="Добавить задачу" disabled={!state.isFormReadyToSubmit}/>
             </div>
         </form>

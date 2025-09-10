@@ -1,11 +1,30 @@
 import { useRef, useEffect, useState } from 'react';
 import styles from './TaskCard.module.css';
 
-function TaskCard({ task, deadline, children, onClose, isAddingTask, isFormTask }) {
+function TaskCard({ task, deadline, children, onClose, isAddingTask, isFormTask, currentDate }) {
     const cardRef = useRef(null)
     const [isClosing, setIsClosing] = useState(false);
+    
     const formattedDeadline = deadline ? new Date(deadline).toLocaleDateString('ru-RU') : 'Без срока';
+    const getDeadlineStatus = (deadline, currentDate, formattedDeadline) => {
+        if (!deadline) return 'none'
 
+        if (currentDate === formattedDeadline) {
+            return 'today'
+        } else if (currentDate > formattedDeadline) {
+            return 'missed'
+        } else if (currentDate < formattedDeadline) {
+            return 'pending'
+        }
+    }
+
+    const deadlineStatus = getDeadlineStatus(deadline, currentDate, formattedDeadline)
+    console.log(deadlineStatus);
+    console.log(currentDate);
+    console.log(formattedDeadline);
+    
+    
+    
     useEffect(() => {
         if (!children || !onClose) return;
 
@@ -35,7 +54,7 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isFormTask 
             <span className={styles.title}>{task}</span>
             {children}
             {(!children) && (
-                <span className={styles.deadline}>{formattedDeadline}</span>
+                <span className={`${styles.deadline} ${styles[deadlineStatus]}`}>{formattedDeadline}</span>
             )}
         </div>
     );

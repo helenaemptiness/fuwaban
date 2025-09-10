@@ -22,6 +22,11 @@ function App() {
   const [activeColumnId, setActiveColumnId] = useState(null);
   const [isAddingTask, setIsAddingTask] = useState(false)
   
+  const today = new Date();
+  const formattedToday = today.toISOString().split('T')[0]
+  const localToday = today.toLocaleDateString('ru-RU')
+
+  
 
   const openTaskForm = (columnId) => {
     setActiveColumnId(columnId);
@@ -123,9 +128,10 @@ function App() {
                         isFormTask={true}
                         onClose={() => {
                           setIsAddingTask(false)
-                          setIsFormTask(false)
+
                         }}>
                             <TaskCardForm 
+                                minDate={formattedToday}
                                 onClose={() => setIsAddingTask(false)}
                                 onSubmit={(taskData) => addTaskToColumn(column.id, taskData)}
                             />
@@ -139,6 +145,7 @@ function App() {
                           task={task.text}
                           deadline={task.deadline}
                           isAddingTask={isAddingTask}
+                          currentDate={localToday}
                         />
                       ))}
                       

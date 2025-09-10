@@ -2,8 +2,9 @@ import { useEffect, useReducer, useRef, useState } from 'react';
 import Button from '../Button/Button';
 import styles from './TaskCardForm.module.css';
 import { INITIAL_STATE, formReducer, validateInput } from "./TaskCardForm.state"
-function TaskCardForm({ onSubmit, onClose }) {
+function TaskCardForm({ onSubmit, onClose, minDate }) {
     const [state, dispatch] = useReducer(formReducer, INITIAL_STATE);
+
 
 
     const handleChange = (e) => {
@@ -69,6 +70,7 @@ function TaskCardForm({ onSubmit, onClose }) {
                 <span className={styles.form__span}>
                     <label className={styles.label__date} htmlFor="deadline">До:</label>
                     <input type="date" name="deadline" id="deadline" 
+                    min={minDate}
                     value={state.values.deadline}
                     onChange={handleChange}
                     disabled={state.values.noDeadline}/>

@@ -10,8 +10,13 @@
     background: transparent;
     border: none;
     outline: none;
-    width: 100%
+    width: 100%;
 }
 .input::placeholder {
     color: #908799;
+}
+.form__buttons {
+    display: flex;
+    justify-content: start;
+    gap: 3px;
 }

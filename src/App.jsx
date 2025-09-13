@@ -18,69 +18,23 @@ import TaskCardForm from './components/TaskCardForm/TaskCardForm';
 
 
 function App() {
-  const buttonColors = ["#8646c1", "#908799", "#E79690", "#74B97C"] //interafsce&backlog, to-do, in-progress, completed
-  const [activeColumnId, setActiveColumnId] = useState(null);
-  const [isAddingTask, setIsAddingTask] = useState(false)
-  
-  const today = new Date();
-  const formattedToday = today.toISOString().split('T')[0]
-  const localToday = today.toLocaleDateString('ru-RU')
-
-  
-
-  const openTaskForm = (columnId) => {
-    setActiveColumnId(columnId);
-    setIsAddingTask(true);
-  };
-
-  const [isAddingBoard, setIsAddingBoard] = useState(false);
   const [activeBoardId, setActiveBoardId] = useState(null);
-  
-  const openBoardItemForm = () => {
-    setIsAddingBoard(true);
-  };
-
   const [boards, setBoards] = useState([]);
+
   useEffect(() => {
-    const savedBoards = JSON.parse(localStorage.getItem('boards')) || [];
-    setBoards(savedBoards);
-  }, [])
-
-  const addNewBoardItem = (newBoard) => {
-    setBoards(existingBoards => [...existingBoards, newBoard]);
-    setActiveBoardId(newBoard.id)
-    setIsAddingBoard(false)
-  };
-
-  const activateBoard = (boardId) => {
-    if (isAddingBoard) {
-      setIsAddingBoard(false)
+    try {
+      const savedBoards = JSON.parse(localStorage.getItem('boards') || '[]')
+      setBoards(savedBoards)
+    } catch (error) {
+      console.error('Error parsing boards from localStorage', error);
+      setBoards([]);
+      localStorage.setItem('boards', JSON.stringify([]));
     }
-    setActiveBoardId(boardId);
-  }
+  }, []);
 
-  const addTaskToColumn = (columnId, newTask) => {
-    setBoards(existingBoards => {
-      const updatedBoards = existingBoards.map(board => {
-        if (board.id === activeBoardId) {
-          return {
-            ...board,
-            columns: board.columns.map(column => {
-              if (column.id === columnId) {
-                return {
-                  ...column,
-                  tasks: [...column.tasks, newTask]
-                };
-              }
-              return column;
-            })
-          };
-        }
-        return board;
-      });
-      localStorage.setItem('boards', JSON.stringify(updatedBoards));
-      return updatedBoards;
-    });
+  const updateBoards = (updatedBoards) => {
+    setBoards(updatedBoards);
+    localStorage.setItem('boards', JSON.stringify(updatedBoards))
   };
 
   return (
@@ -88,71 +42,20 @@ function App() {
       <LeftPanel>
         <Header/>
         <LeftPanelBody>
-          <NewItemButton onClick={openBoardItemForm} color={buttonColors[0]}/>
-          <BoardList>
-            {isAddingBoard && (
-              <BoardListItem isForm={true}>
-                <BoardListItemForm onAddBoard={addNewBoardItem}/>
-              </BoardListItem>
-            )}
-            {boards
-              .sort((a, b) => b.id - a.id)
-              .map(board => (
-                  <BoardListItem 
-                    key={board.id} 
-                    title={board.title} 
-                    isActive={activeBoardId === board.id}
-                    onBoardClick={() => activateBoard(board.id)}
-                  />
-            ))}
-            
-          </BoardList>
+          <BoardList
+          boards={boards}
+          activeBoardId={activeBoardId}
+          setActiveBoardId={setActiveBoardId}
+          updateBoards={updateBoards}
+          />
         </LeftPanelBody>
       </LeftPanel>
       <KanbanBody>
-        <ColumnWrapper>
-        {boards
-              .filter(board => board.id === activeBoardId)
-              .map(board => (
-                  board.columns.map(column => (
-                    <Column 
-                      key={column.id}
-                      title={column.title}
-                      type={column.type}
-                      tasks={column.tasks}
-                      color={column.type}
-                    >
-                      <NewItemButton color={column.color} onClick={() => openTaskForm(column.id)}/>
-                      {isAddingTask && activeColumnId === column.id && (
-                        <TaskCard 
-                        isFormTask={true}
-                        onClose={() => {
-                          setIsAddingTask(false)
-
-                        }}>
-                            <TaskCardForm 
-                                minDate={formattedToday}
-                                onClose={() => setIsAddingTask(false)}
-                                onSubmit={(taskData) => addTaskToColumn(column.id, taskData)}
-                            />
-                        </TaskCard>
-                      )}
-                      {column.tasks
-                      .sort((a, b) => b.id - a.id)
-                      .map(task => (
-                        <TaskCard 
-                          key={task.id}
-                          task={task.text}
-                          deadline={task.deadline}
-                          isAddingTask={isAddingTask}
-                          currentDate={localToday}
-                        />
-                      ))}
-                      
-                    </Column>
-                  ))
-            ))}
-        </ColumnWrapper>
+        <ColumnWrapper
+          boards={boards}
+          activeBoardId={activeBoardId}
+          updateBoards={updateBoards}
+        />
       </KanbanBody>
 
     </div>

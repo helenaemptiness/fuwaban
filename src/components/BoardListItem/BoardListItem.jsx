@@ -1,17 +1,56 @@
+import { useEffect, useRef, useState } from 'react';
 import DeleteButton from '../DeleteButton/DeleteButton';
 import EditButton from '../EditButton/EditButton';
 import styles from './BoardListItem.module.css';
+import BoardListItemForm from '../BoardListItemForm/BoardListItemForm';
 
 
-function BoardListItem({ title, onBoardClick, children, isActive, isForm = false, onEditClick, id }) {
+function BoardListItem({ title, onBoardClick, children, isActive, isForm = false, onEdit, onDelete }) {
+    const [isEditing, setIsEditing] = useState(false)
+    const formRef = useRef(null)
+    const handleEditClick = (e) => {
+        e.stopPropagation()
+        setIsEditing(true)
+    }
 
+    const handleEditSubmit = (newTitle) => {
+        onEdit(newTitle)
+        setIsEditing(false)
+    }
 
-    const clickBoard = () => {
-        if (!isForm) {
-            onBoardClick()
+    const handleEditCancel = () => {
+        setIsEditing(false)
+    }
+
+    useEffect(() => {
+        if (!isActive && isEditing) {
+            setIsEditing(false)
         }
-    };
-    {console.log(isForm)}
+    }, [isActive, isEditing])
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (formRef.current && !formRef.current.contains(event.target)) {
+                handleEditCancel();
+            }
+        };
+
+        if (isEditing) {
+            setTimeout(() => {
+                document.addEventListener('mousedown', handleClickOutside)
+            }, 0)
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [isEditing])
+
+    const handleItemClick = (e) => {
+        if (!isEditing) {
+            onBoardClick(e)
+        }
+    }
+
     return (
         
         <div 
@@ -20,18 +59,26 @@ function BoardListItem({ title, onBoardClick, children, isActive, isForm = false
                     ${isActive ? styles.current__item : ''} 
                     ${isForm ? styles.form__item : ''}
                     `}
-            onClick={clickBoard}
+            onClick={handleItemClick}
         >
-            {title}
-            {!isForm && isActive && (
+            {!isEditing && (title)}
+
+            {!isForm && isActive && !isEditing && (
                 
             <div className={styles.item__instruments}>
-                <EditButton onClick={() => console.log('ok')
-                }/>
-                <DeleteButton onClick={() => console.log('ok')
-                }/>
+                <EditButton onClick={handleEditClick}/>
+                <DeleteButton onClick={onDelete}/>
             </div>
             
+            )}
+            {isEditing && (
+                <BoardListItemForm 
+                    ref={formRef}
+                    initialTitle={title}
+                    onSubmit={handleEditSubmit}
+                    onCancel={handleEditCancel}
+                    isEditMode={true}
+                />
             )}
             
             {children}

@@ -5,9 +5,10 @@ import styles from './BoardListItem.module.css';
 import BoardListItemForm from '../BoardListItemForm/BoardListItemForm';
 
 
-function BoardListItem({ title, onBoardClick, children, isActive, isForm = false, onEdit, onDelete }) {
+function BoardListItem({ title, onBoardClick, children, isActive, isForm = false, onEdit, onDelete, isFormOpen, isFormClosing }) {
     const [isEditing, setIsEditing] = useState(false)
     const formRef = useRef(null)
+
     const handleEditClick = (e) => {
         e.stopPropagation()
         setIsEditing(true)
@@ -32,12 +33,11 @@ function BoardListItem({ title, onBoardClick, children, isActive, isForm = false
             if (formRef.current && !formRef.current.contains(event.target)) {
                 handleEditCancel();
             }
+            
         };
 
-        if (isEditing) {
-            setTimeout(() => {
-                document.addEventListener('mousedown', handleClickOutside)
-            }, 0)
+        if (isEditing ) {
+            document.addEventListener('mousedown', handleClickOutside)
         }
 
         return () => {
@@ -58,6 +58,8 @@ function BoardListItem({ title, onBoardClick, children, isActive, isForm = false
                     ${styles.list__item} 
                     ${isActive ? styles.current__item : ''} 
                     ${isForm ? styles.form__item : ''}
+                    ${isFormOpen ? styles.open : ''}
+                    ${isFormClosing ? styles.closing : ''}
                     `}
             onClick={handleItemClick}
         >

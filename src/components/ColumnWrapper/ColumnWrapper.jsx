@@ -14,8 +14,11 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
     const localToday = today.toLocaleDateString('ru-RU')
 
     const openTaskForm = (columnId) => {
-        setActiveColumnId(columnId);
-        setIsAddingTask(true);
+        setTimeout(() => {
+            setActiveColumnId(columnId);
+            setIsAddingTask(true);
+        }, 200);
+        
     };
 
     const addTaskToColumn = (columnId, newTask) => {

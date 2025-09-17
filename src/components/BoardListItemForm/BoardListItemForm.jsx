@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import styles from './BoardListItemForm.module.css';
 import Button from '../Button/Button';
 
 
-function BoardListItemForm({ onAddBoard, onEdit, onCancel, isEditMode = false, initialTitle = '' }) {
+const BoardListItemForm = forwardRef(({ 
+    onAddBoard, onEdit, onCancel, isEditMode = false, initialTitle = '' }, ref) => {
     const [boardTitle, setBoardTitle] = useState('')
     
     useEffect(() => {
@@ -69,7 +70,7 @@ function BoardListItemForm({ onAddBoard, onEdit, onCancel, isEditMode = false, i
     }
 
     return (
-        <form className={styles.item__form} onSubmit={handleSubmit}>
+        <form ref={ref} className={styles.item__form} onSubmit={handleSubmit}>
             <input 
                 autoFocus
                 className={styles.input}
@@ -90,6 +91,7 @@ function BoardListItemForm({ onAddBoard, onEdit, onCancel, isEditMode = false, i
             </div>
         </form>
     );
-}
+})
+BoardListItemForm.displayName = 'BoardListItemForm'
 
 export default BoardListItemForm

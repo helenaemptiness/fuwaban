@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './BoardList.module.css';
 import NewItemButton from '../NewItemButton/NewItemButton';
 import BoardListItem from '../BoardListItem/BoardListItem';
@@ -7,10 +7,26 @@ import BoardListItemForm from '../BoardListItemForm/BoardListItemForm';
 function BoardList({ boards, activeBoardId, setActiveBoardId, updateBoards }) {
     const buttonColor = "#8646c1"
     const [isAddingBoard, setIsAddingBoard] = useState(false);
+    const [isClosingForm, setIsClosingForm] = useState()
+    const formRef = useRef(null)
+    const buttonRef = useRef(null)
 
-    const openBoardItemForm = () => {
-        setIsAddingBoard(true);
-    };
+
+    const handleAddClick = (e) => {
+        e.stopPropagation()
+        if (isAddingBoard) {
+            setIsClosingForm(true);
+            setTimeout(() => {
+                setIsAddingBoard(false)
+                setIsClosingForm(false)
+            }, 300);
+        } else {
+            setIsAddingBoard(true);
+            setIsClosingForm(false)
+        }
+        
+        
+    }
     
     const addNewBoardItem = (newBoard) => {
         updateBoards([...boards, newBoard]);
@@ -26,6 +42,30 @@ function BoardList({ boards, activeBoardId, setActiveBoardId, updateBoards }) {
         }
         setActiveBoardId(boardId);
     }
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (buttonRef.current && buttonRef.current.contains(event.target)) {
+                return;
+            }
+            if (formRef.current && formRef.current.contains(event.target)) {
+                return;
+            }
+            if (isAddingBoard && !isClosingForm) {
+                setIsClosingForm(true);
+                setTimeout(() => {
+                    setIsAddingBoard(false);
+                    setIsClosingForm(false)
+                }, 300);
+            }
+        }
+        if (isAddingBoard) {
+            document.addEventListener('mousedown', handleClickOutside)
+
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside)
+            }
+        }
+    }, [isAddingBoard])
 
     const deleteBoard = (boardId) => {
         if (!window.confirm('Вы уверены, что хотите удалить эту доску?')) {
@@ -50,10 +90,10 @@ function BoardList({ boards, activeBoardId, setActiveBoardId, updateBoards }) {
 
     return (
         <div className={styles.board__list}>
-            <NewItemButton onClick={openBoardItemForm} color={buttonColor}/>
+            <NewItemButton ref={buttonRef} onClick={handleAddClick} color={buttonColor}/>
             {isAddingBoard && (
-                <BoardListItem isForm={true}>
-                    <BoardListItemForm onAddBoard={addNewBoardItem}/>
+                <BoardListItem isForm={true} isFormOpen={isAddingBoard} isFormClosing={isClosingForm}>
+                    <BoardListItemForm ref={formRef} onAddBoard={addNewBoardItem}/>
                 </BoardListItem>
                 )}
                 {boards

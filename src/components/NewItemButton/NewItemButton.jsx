@@ -1,9 +1,10 @@
+import { forwardRef } from 'react';
 import styles from './NewItemButton.module.css';
 
-function NewItemButton({ color, onClick }) {
+const NewItemButton = forwardRef(({ color, onClick }, ref) => {
 
     return (
-        <button className={styles.item__button} onClick={onClick}>
+        <button ref={ref} className={styles.item__button} onClick={onClick}>
             <svg width="44" 
             height="44" 
             viewBox="0 0 44 44" 
@@ -14,6 +15,7 @@ function NewItemButton({ color, onClick }) {
             </svg>
         </button>
     );
-}
+})
 
+NewItemButton.displayName = 'NewItemButton'
 export default NewItemButton

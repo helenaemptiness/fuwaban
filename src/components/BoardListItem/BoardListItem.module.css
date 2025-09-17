@@ -39,6 +39,7 @@
 
 .form__item {
     border: 1px solid #8646c1;
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .form__item:hover,
@@ -48,8 +49,28 @@
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.732);
 }
 
+.form__item.open {
+    animation: slideDown 0.3s ease-out
+}
+
+.form__item.closing {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .item__instruments {
     display: flex;
     gap: 3px;
 }
-

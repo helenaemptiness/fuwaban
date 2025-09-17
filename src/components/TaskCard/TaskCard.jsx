@@ -44,7 +44,7 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isFormTask,
         setIsClosing(true);
         setTimeout(() => {
             onClose();
-        }, 360); // Должно совпадать с длительностью анимации
+        }, 360); 
     };
 
     return (

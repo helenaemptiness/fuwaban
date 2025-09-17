@@ -4,21 +4,24 @@ import styles from './TaskCard.module.css';
 function TaskCard({ task, deadline, children, onClose, isAddingTask, isFormTask, currentDate }) {
     const cardRef = useRef(null)
     const [isClosing, setIsClosing] = useState(false);
-    
+        // const localToday = currentDate.toLocaleDateString('ru-RU')
+    const deadlineDate = new Date(deadline)
     const formattedDeadline = deadline ? new Date(deadline).toLocaleDateString('ru-RU') : 'Без срока';
-    const getDeadlineStatus = (deadline, currentDate, formattedDeadline) => {
+    
+    const deadlineDateNew = new Date(deadlineDate.getFullYear(), deadlineDate.getMonth(), deadlineDate.getDate())
+    const getDeadlineStatus = (deadline, currentDate, deadlineDateNew) => {
         if (!deadline) return 'none'
 
-        if (currentDate === formattedDeadline) {
+        if (currentDate.getTime() === deadlineDateNew.getTime()) {
             return 'today'
-        } else if (currentDate > formattedDeadline) {
+        } else if (currentDate > deadlineDateNew) {
             return 'missed'
-        } else if (currentDate < formattedDeadline) {
+        } else if (currentDate < deadlineDateNew) {
             return 'pending'
         }
     }
 
-    const deadlineStatus = getDeadlineStatus(deadline, currentDate, formattedDeadline)
+    const deadlineStatus = getDeadlineStatus(deadline, currentDate, deadlineDateNew)
     console.log(deadlineStatus);
     console.log(currentDate);
     console.log(formattedDeadline);

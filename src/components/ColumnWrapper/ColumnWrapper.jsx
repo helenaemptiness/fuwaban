@@ -9,9 +9,10 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
     const [activeColumnId, setActiveColumnId] = useState(null);
     const [isAddingTask, setIsAddingTask] = useState(false)
     
-    const today = new Date();
+    const today = new Date()
+    const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const formattedToday = today.toISOString().split('T')[0]
-    const localToday = today.toLocaleDateString('ru-RU')
+
 
     const openTaskForm = (columnId) => {
         setTimeout(() => {
@@ -80,7 +81,7 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
                             task={task.text}
                             deadline={task.deadline}
                             isAddingTask={isAddingTask}
-                            currentDate={localToday}
+                            currentDate={todayDate}
                             />
                         ))}
                         

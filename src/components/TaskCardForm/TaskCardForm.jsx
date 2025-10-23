@@ -1,9 +1,18 @@
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import Button from '../Button/Button';
 import styles from './TaskCardForm.module.css';
 import { INITIAL_STATE, formReducer, validateInput } from "./TaskCardForm.state"
-function TaskCardForm({ onSubmit, onClose, minDate }) {
-    const [state, dispatch] = useReducer(formReducer, INITIAL_STATE);
+function TaskCardForm({ formType, onSubmit, onClose, minDate, task, deadline, noDeadline }) {
+    const [buttonText, setButtonText] = useState('')
+    const [state, dispatch] = useReducer(formReducer, {
+        ...INITIAL_STATE,
+        values: {
+            ...INITIAL_STATE.values,
+            task: task || '',
+            deadline: deadline || '',
+            noDeadline: noDeadline || false
+        }
+    });
 
 
 
@@ -58,9 +67,25 @@ function TaskCardForm({ onSubmit, onClose, minDate }) {
     }
 
     const handleReset = () => {
-        dispatch({ type: 'RESET' });
+        dispatch({
+            type: 'RESET_TO_INITIAL',
+            payload: {
+                task: task || '',
+                deadline: deadline || '',
+                noDeadline: noDeadline || false
+            }
+        });
     }
 
+    useEffect(() => {
+        if (formType === 'addTask') {
+            setButtonText('Добавить задачу')
+        } else if (formType === 'editTask') {
+            setButtonText('Сохранить')
+        }
+    })
+
+    
     return (
         <form className={styles.card__form} onSubmit={handleSubmit}>
             <input className={styles.input} type="text" name="task" placeholder='Новая задача'
@@ -88,7 +113,7 @@ function TaskCardForm({ onSubmit, onClose, minDate }) {
                     name="Очистить" 
                     onClick={handleReset}
                 />
-                <Button type="submit" name="Добавить задачу" disabled={!state.isFormReadyToSubmit}/>
+                <Button type="submit" name={buttonText} disabled={!state.isFormReadyToSubmit}/>
             </div>
         </form>
     );

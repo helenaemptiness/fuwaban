@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './ColumnWrapper.module.css';
 import Column from '../Column/Column';
 import TaskCard from '../TaskCard/TaskCard';
@@ -8,11 +8,15 @@ import NewItemButton from '../NewItemButton/NewItemButton';
 function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
     const [activeColumnId, setActiveColumnId] = useState(null);
     const [isAddingTask, setIsAddingTask] = useState(false)
+    const [editingTaskId, setEditingTaskId] = useState(null);
     
     const today = new Date()
     const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const formattedToday = today.toISOString().split('T')[0]
 
+    useEffect(() => {
+        
+    })
 
     const openTaskForm = (columnId) => {
         setTimeout(() => {
@@ -20,6 +24,14 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
             setIsAddingTask(true);
         }, 200);
         
+    };
+
+    const startEditingTask = (taskId) => {
+        setEditingTaskId(taskId);
+    };
+
+    const cancelEditingTask = () => {
+        setEditingTaskId(null);
     };
 
     const addTaskToColumn = (columnId, newTask) => {
@@ -45,6 +57,37 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
             return updatedBoards;
         });
     };
+
+    const updateTaskInColumn = (columnId, taskId, updatedTask) => {
+        updateBoards(existingBoards => {
+            const updatedBoards = existingBoards.map(board => {
+                if (board.id === activeBoardId) {
+                    return {
+                        ...board,
+                        columns: board.columns.map(column => {
+                            if (column.id === columnId) {
+                                return {
+                                    ...column,
+                                    tasks: column.tasks.map(task => 
+                                        task.id === taskId 
+                                            ? { ...task, ...updatedTask }
+                                            : task
+                                    )
+                                };
+                            }
+                            return column;
+                        })
+                    };
+                }
+                return board;
+            });
+            localStorage.setItem('boards', JSON.stringify(updatedBoards));
+            return updatedBoards;
+        });
+
+        setEditingTaskId(null);
+    };
+
     return (
         <div className={styles.wrapper}>
             {boards
@@ -67,6 +110,7 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
 
                             }}>
                                 <TaskCardForm 
+                                    formType={'addTask'}
                                     minDate={formattedToday}
                                     onClose={() => setIsAddingTask(false)}
                                     onSubmit={(taskData) => addTaskToColumn(column.id, taskData)}
@@ -77,11 +121,16 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
                         .sort((a, b) => b.id - a.id)
                         .map(task => (
                             <TaskCard 
-                            key={task.id}
-                            task={task.text}
-                            deadline={task.deadline}
-                            isAddingTask={isAddingTask}
-                            currentDate={todayDate}
+                                key={task.id}
+                                task={task.text}
+                                deadline={task.deadline}
+                                isAddingTask={isAddingTask}
+                                isEditingTask={editingTaskId === task.id}
+                                isMoving={editingTaskId !== null && editingTaskId !== task.id}
+                                currentDate={todayDate}
+                                onEdit={(editedTask) => updateTaskInColumn(column.id, task.id, editedTask)}
+                                onEditClick={() => startEditingTask(task.id)}
+                                onEditCancel={cancelEditingTask}
                             />
                         ))}
                         

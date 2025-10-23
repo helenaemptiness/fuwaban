@@ -38,10 +38,19 @@ export function formReducer(state, action) {
 
             case 'RESET':
                 return INITIAL_STATE;
+            case 'RESET_TO_INITIAL':
+                return {
+                    ...state,
+                    values: {
+                        task: action.payload.task,
+                        deadline: action.payload.deadline,
+                        noDeadline: action.payload.noDeadline
+                    }
+                };
             default:
-                return state;    
-    }
-}   
+                return state;
+    }  
+}
 
 export function validateInput(name, value, noDeadline) {
     switch (name) {

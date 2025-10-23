@@ -7,6 +7,7 @@ import BoardListItemForm from '../BoardListItemForm/BoardListItemForm';
 
 function BoardListItem({ title, onBoardClick, children, isActive, isForm = false, onEdit, onDelete, isFormOpen, isFormClosing }) {
     const [isEditing, setIsEditing] = useState(false)
+    const [boardTitle, setBoardTitle] = useState(title)
     const formRef = useRef(null)
 
     const handleEditClick = (e) => {
@@ -14,9 +15,16 @@ function BoardListItem({ title, onBoardClick, children, isActive, isForm = false
         setIsEditing(true)
     }
 
+    const editBoardTitle = (title) => {
+        setBoardTitle(title)
+        onEdit(title)
+
+    }
+
     const handleEditSubmit = (newTitle) => {
-        onEdit(newTitle)
+        editBoardTitle(newTitle)
         setIsEditing(false)
+
     }
 
     const handleEditCancel = () => {
@@ -46,7 +54,7 @@ function BoardListItem({ title, onBoardClick, children, isActive, isForm = false
     }, [isEditing])
 
     const handleItemClick = (e) => {
-        if (!isEditing) {
+        if (!isForm) {
             onBoardClick(e)
         }
     }
@@ -63,23 +71,24 @@ function BoardListItem({ title, onBoardClick, children, isActive, isForm = false
                     `}
             onClick={handleItemClick}
         >
-            {!isEditing && (title)}
+            {!isEditing && (boardTitle)}
 
             {!isForm && isActive && !isEditing && (
                 
             <div className={styles.item__instruments}>
-                <EditButton onClick={handleEditClick}/>
-                <DeleteButton onClick={onDelete}/>
+                <EditButton onClick={handleEditClick} color={'#FFFFFF'}/>
+                <DeleteButton onClick={onDelete} color={'#FFFFFF'}/>
             </div>
             
             )}
             {isEditing && (
                 <BoardListItemForm 
                     ref={formRef}
-                    initialTitle={title}
-                    onSubmit={handleEditSubmit}
+                    initialTitle={boardTitle}
+                    onEdit={handleEditSubmit}
                     onCancel={handleEditCancel}
                     isEditMode={true}
+                    
                 />
             )}
             

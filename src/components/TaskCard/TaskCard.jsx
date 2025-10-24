@@ -5,12 +5,11 @@ import DeleteButton from '../DeleteButton/DeleteButton';
 import TaskOptions from '../TaskOptions/TaskOptions';
 import TaskCardForm from '../TaskCardForm/TaskCardForm'
 
-function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTask, isFormTask, currentDate, onEdit, onDelete, isMoving, onEditClick, onEditCancel }) {
+function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTask, isFormTask, currentDate, onEdit, onDeleteClick, isMoving, onEditClick, onEditCancel }) {
     const cardRef = useRef(null)
     const [isCardEditing, setIsCardEditing] = useState(false)
     const [cardDeadline, setCardDeadline] = useState(deadline)
     const [cardTask, setCardTask] = useState(task)
-    const [isActiveTask, setIsActiveTask] = useState(null)
     const [isClosing, setIsClosing] = useState(false);
     const [isHovered, setIsHovered] = useState(false)
 
@@ -78,7 +77,6 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTa
 
     const handleEditClick = (e) => {
         setIsCardEditing(true)
-        setIsActiveTask()
         onEditClick(e.target)
     }
 
@@ -146,6 +144,7 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTa
                     {isHovered  && (
                         <TaskOptions
                             onEdit={handleEditClick}
+                            onDelete={onDeleteClick}
                         />
                     )}
                 </div>

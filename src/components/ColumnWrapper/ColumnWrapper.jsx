@@ -88,6 +88,35 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
         setEditingTaskId(null);
     };
 
+    const deleteTask = (columnId, taskId) => {
+        if (!window.confirm('Вы уверены, что хотите удалить эту задачу?')) {
+            return;
+        }
+        
+
+    updateBoards(existingBoards => {
+            const updatedBoards = existingBoards.map(board => {
+                if (board.id === activeBoardId) {
+                    return {
+                        ...board,
+                        columns: board.columns.map(column => {
+                            if (column.id === columnId) {
+                                return {
+                                    ...column,
+                                    tasks: column.tasks.filter(task => task.id !== taskId)
+                                };
+                            }
+                            return column;
+                        })
+                    };
+                }
+                return board;
+            });
+            localStorage.setItem('boards', JSON.stringify(updatedBoards));
+            return updatedBoards;
+        });
+    };
+
     return (
         <div className={styles.wrapper}>
             {boards
@@ -117,9 +146,7 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
                                 />
                             </TaskCard>
                         )}
-                        {column.tasks
-                        .sort((a, b) => b.id - a.id)
-                        .map(task => (
+                        {column.tasks.map(task => (
                             <TaskCard 
                                 key={task.id}
                                 task={task.text}
@@ -131,6 +158,7 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
                                 onEdit={(editedTask) => updateTaskInColumn(column.id, task.id, editedTask)}
                                 onEditClick={() => startEditingTask(task.id)}
                                 onEditCancel={cancelEditingTask}
+                                onDeleteClick={() => deleteTask(column.id, task.id)}
                             />
                         ))}
                         

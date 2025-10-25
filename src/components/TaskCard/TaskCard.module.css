@@ -19,10 +19,12 @@
     transform: scale(0.95);
     pointer-events: none;
 }
+
 .card.moving {
     transform: translateY(4px);
     opacity: 0.6;
 }
+
 .card.open {
     animation: slideDown 0.3s ease-out
 }
@@ -32,6 +34,7 @@
         opacity: 0;
         transform: translateY(-20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -42,7 +45,7 @@
     font-weight: 400;
     font-size: 14px;
     color: #000;
-    flex: 1; 
+    flex: 1;
     overflow-wrap: break-word;
 }
 
@@ -53,12 +56,15 @@
     /* justify-content: flex-end; */
     font-style: italic;
 }
+
 .deadline.pending, .deadline.none {
     color: #908799;
 }
+
 .deadline.today {
     color: #8646c1;
 }
+
 .deadline.missed {
     color: #df569d;
 }
@@ -70,4 +76,22 @@
     flex-direction: row-reverse;
     align-items: center;
     padding-top: 5px;
+}
+
+.card {
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.card:active {
+    cursor: grabbing;
+}
+
+.card.dragging {
+    opacity: 0.5;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.card.dragging .task_infopannel {
+    opacity: 0;
 }

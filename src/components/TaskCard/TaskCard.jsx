@@ -1,17 +1,16 @@
 import { useRef, useEffect, useState } from 'react';
 import styles from './TaskCard.module.css';
-import EditButton from '../EditButton/EditButton';
-import DeleteButton from '../DeleteButton/DeleteButton';
 import TaskOptions from '../TaskOptions/TaskOptions';
 import TaskCardForm from '../TaskCardForm/TaskCardForm'
 
-function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTask, isFormTask, currentDate, onEdit, onDeleteClick, isMoving, onEditClick, onEditCancel }) {
+function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTask, isFormTask, currentDate, onEdit, onDeleteClick, isMoving, onEditClick, onEditCancel, onDragStart, onDragEnd, taskId, columnId }) {
     const cardRef = useRef(null)
     const [isCardEditing, setIsCardEditing] = useState(false)
     const [cardDeadline, setCardDeadline] = useState(deadline)
     const [cardTask, setCardTask] = useState(task)
     const [isClosing, setIsClosing] = useState(false);
     const [isHovered, setIsHovered] = useState(false)
+    const [isDragging, setIsDragging] = useState(false)
 
     const deadlineDate = new Date(cardDeadline)
     const formattedDeadline = cardDeadline ? new Date(cardDeadline).toLocaleDateString('ru-RU') : 'Без срока';
@@ -102,6 +101,35 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTa
         }
     }
 
+    const handleDragStart = (e) => {
+        setIsDragging(true);
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+            taskId: taskId,
+            fromColumnId: columnId,
+            task: { id: taskId, text: task, deadline: deadline }
+        }));
+        e.dataTransfer.effectAllowed = 'move';
+        e.currentTarget.classList.add(styles.dragging);
+
+        if (onDragStart) {
+            onDragStart(taskId, columnId);
+        }
+    }
+
+    const handleDragEnd = (e) => {
+        setIsDragging(false)
+        e.currentTarget.classList.remove(styles.dragging)
+        
+        if (onDragEnd) {
+            onDragEnd()
+        }
+    }
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        
+    }
+
     const cardClasses = [
         styles.card,
         isClosing ? styles.closing : '',
@@ -109,15 +137,19 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTa
         isMoving ? styles.moving : '', 
         isFormTask ? styles.open : '',
         isEditingTask ? styles.open : '', 
+        isDragging ? styles.dragging : '',
     ].filter(Boolean).join(' ');
     
     return (
-        <>
-            <div 
+        <div 
             className={cardClasses}
             ref={cardRef}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            draggable={!isCardEditing && !children}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragOver={handleDragOver}
             >
                 {!isCardEditing && (
                     <span className={styles.title}>{cardTask}</span>
@@ -149,10 +181,8 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTa
                     )}
                 </div>
                 )}
-            </div>
+        </div>
 
-            
-        </>
     );
 }
 

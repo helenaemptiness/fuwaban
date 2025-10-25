@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './ColumnWrapper.module.css';
 import Column from '../Column/Column';
 import TaskCard from '../TaskCard/TaskCard';
@@ -9,14 +9,11 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
     const [activeColumnId, setActiveColumnId] = useState(null);
     const [isAddingTask, setIsAddingTask] = useState(false)
     const [editingTaskId, setEditingTaskId] = useState(null);
-    
+    const [dragOverColumn, setDragOverColumn] = useState(null);
+
     const today = new Date()
     const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const formattedToday = today.toISOString().split('T')[0]
-
-    useEffect(() => {
-        
-    })
 
     const openTaskForm = (columnId) => {
         setTimeout(() => {
@@ -117,6 +114,55 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
         });
     };
 
+    const handleDragEnd = () => {
+        setDragOverColumn(null);
+    };
+
+    const handleColumnDragOver = (columnId, e) => {
+        e.preventDefault()
+        setDragOverColumn(columnId);
+    };
+
+    const handleColumnDrop = (toColumnId, e) => {
+        e.preventDefault();
+
+        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+        const {taskId, fromColumnId, task} = data;
+
+        if (fromColumnId === toColumnId) {
+            setDragOverColumn(null);
+            console.log('current to current');
+            return;
+        }
+
+        updateBoards(existingBoards => {
+            const updatedBoards = existingBoards.map(board => {
+                if (board.id === activeBoardId) {
+                    return {
+                        ...board,
+                        columns: board.columns.map(column => {
+                            if (column.id === fromColumnId) {
+                                return {
+                                    ...column,
+                                    tasks: column.tasks.filter(t => t.id !== taskId)
+                                };
+                            } else if (column.id === toColumnId) {
+                                return {
+                                    ...column,
+                                    tasks: [...column.tasks, task]
+                                };
+                            }
+                            return column;
+                        })
+                    };
+                }
+                return board;
+            });
+            localStorage.setItem('boards', JSON.stringify(updatedBoards));
+                        return updatedBoards;
+        });
+        setDragOverColumn(null);
+    }
     return (
         <div className={styles.wrapper}>
             {boards
@@ -129,6 +175,9 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
                         type={column.type}
                         tasks={column.tasks}
                         color={column.type}
+                        onDragOver={(e) => handleColumnDragOver(column.id, e)}
+                        onDrop={(e) => handleColumnDrop(column.id, e)}
+                        isOver={dragOverColumn === column.id}
                         >
                         <NewItemButton color={column.color} onClick={() => openTaskForm(column.id)}/>
                         {isAddingTask && activeColumnId === column.id && (
@@ -159,6 +208,9 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
                                 onEditClick={() => startEditingTask(task.id)}
                                 onEditCancel={cancelEditingTask}
                                 onDeleteClick={() => deleteTask(column.id, task.id)}
+                                onDragEnd={handleDragEnd}
+                                taskId={task.id}
+                                columnId={column.id}
                             />
                         ))}
                         

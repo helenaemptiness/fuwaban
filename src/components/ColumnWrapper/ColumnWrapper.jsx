@@ -15,6 +15,16 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
     const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const formattedToday = today.toISOString().split('T')[0]
 
+    const sortTasksByDeadline = (tasks) => {
+        return [...tasks].sort((a, b) => {
+            if (!a.deadline && !b.deadline) return 0;
+            if (!a.deadline) return 1;
+            if (!b.deadline) return -1;
+
+            return new Date(a.deadline) - new Date(b.deadline);
+        })
+    }
+
     const openTaskForm = (columnId) => {
         setTimeout(() => {
             setActiveColumnId(columnId);
@@ -195,7 +205,7 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
                                 />
                             </TaskCard>
                         )}
-                        {column.tasks.map(task => (
+                        {sortTasksByDeadline(column.tasks).map(task => (
                             <TaskCard 
                                 key={task.id}
                                 task={task.text}

@@ -71,8 +71,9 @@ function BoardListItem({ title, onBoardClick, children, isActive, isForm = false
                     `}
             onClick={handleItemClick}
         >
-            {!isEditing && (boardTitle)}
-
+            {!isEditing && !isForm && (
+                `${(boardTitle.length > 32 && !isActive ? `${boardTitle.substr(0, 32)}...` : '') || (boardTitle.length > 32 && isActive ? `${boardTitle.substr(0, 28)}...` : boardTitle) }`
+            )}
             {!isForm && isActive && !isEditing && (
                 
             <div className={styles.item__instruments}>

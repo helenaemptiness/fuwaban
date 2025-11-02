@@ -25,3 +25,8 @@
     outline: none;
     cursor: pointer;
 }
+
+.item__button.disabled {
+    opacity: 0.6;
+    cursor: default;
+}

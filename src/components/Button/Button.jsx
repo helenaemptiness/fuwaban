@@ -1,5 +1,4 @@
 import styles from './Button.module.css';
-import cn from 'classnames';
 
 function Button({ name, type, onClick }) {
     return (

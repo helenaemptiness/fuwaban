@@ -1,10 +1,15 @@
 import { forwardRef } from 'react';
 import styles from './NewItemButton.module.css';
 
-const NewItemButton = forwardRef(({ color, onClick }, ref) => {
+const NewItemButton = forwardRef(({ color, onClick, isDisabled }, ref) => {
 
     return (
-        <button ref={ref} className={styles.item__button} onClick={onClick}>
+        <button 
+            ref={ref} 
+            className={`${styles.item__button} ${isDisabled ? styles.disabled : '' }`} 
+            onClick={onClick}
+            disabled={isDisabled}
+        >
             <svg width="44" 
             height="44" 
             viewBox="0 0 44 44" 

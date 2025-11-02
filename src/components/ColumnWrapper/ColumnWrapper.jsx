@@ -10,6 +10,7 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
     const [isAddingTask, setIsAddingTask] = useState(false)
     const [editingTaskId, setEditingTaskId] = useState(null);
     const [dragOverColumn, setDragOverColumn] = useState(null);
+    const [isDisabled, setIsDisabled] = useState(false)
 
     const today = new Date()
     const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -30,8 +31,13 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
             setActiveColumnId(columnId);
             setIsAddingTask(true);
         }, 200);
+        setIsDisabled(true)
         
     };
+    const closeTaskForm = () => {
+        setIsAddingTask(false)
+        setIsDisabled(false)
+    }
 
     const startEditingTask = (taskId) => {
         setEditingTaskId(taskId);
@@ -173,6 +179,35 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
         });
         setDragOverColumn(null);
     }
+
+    const handleColumnSelect = (selectedValue, movingTaskData) => {
+        const {taskId, fromColumnId, task} = movingTaskData
+        updateBoards(existingBoards => {
+            const updatedBoards = existingBoards.map(board => {
+                if (board.id === activeBoardId) {
+                    return {
+                        ...board,
+                        columns: board.columns.map(column => {
+                            if (column.id === fromColumnId) {
+                                return {
+                                    ...column,
+                                    tasks: column.tasks.filter(t => t.id !== taskId)
+                                };
+                            } else if (column.title === selectedValue) {
+                                return {
+                                    ...column,
+                                    tasks: [...column.tasks, task]
+                                };
+                            }
+                            return column;
+                        })
+                    };
+                }
+                return board;
+            });
+            localStorage.setItem('boards', JSON.stringify(updatedBoards));
+                        return updatedBoards;
+    })}
     return (
         <div className={styles.wrapper}>
             {boards
@@ -189,14 +224,15 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
                         onDrop={(e) => handleColumnDrop(column.id, e)}
                         isOver={dragOverColumn === column.id}
                         >
-                        <NewItemButton color={column.color} onClick={() => openTaskForm(column.id)}/>
+                        <NewItemButton 
+                            color={column.color} 
+                            onClick={() => openTaskForm(column.id)}
+                            isDisabled={isDisabled}
+                        />
                         {isAddingTask && activeColumnId === column.id && (
                             <TaskCard 
                             isFormTask={true}
-                            onClose={() => {
-                            setIsAddingTask(false)
-
-                            }}>
+                            onClose={() => closeTaskForm()}>
                                 <TaskCardForm 
                                     formType={'addTask'}
                                     minDate={formattedToday}
@@ -221,6 +257,8 @@ function ColumnWrapper({ boards, activeBoardId, updateBoards }) {
                                 onDragEnd={handleDragEnd}
                                 taskId={task.id}
                                 columnId={column.id}
+                                columnTitle={column.title}
+                                onColumnSelect={(selectedValue, movingTaskData) => handleColumnSelect(selectedValue, movingTaskData)}
                             />
                         ))}
                         

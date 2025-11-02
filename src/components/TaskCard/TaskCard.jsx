@@ -3,7 +3,7 @@ import styles from './TaskCard.module.css';
 import TaskOptions from '../TaskOptions/TaskOptions';
 import TaskCardForm from '../TaskCardForm/TaskCardForm'
 
-function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTask, isFormTask, currentDate, onEdit, onDeleteClick, isMoving, onEditClick, onEditCancel, onDragStart, onDragEnd, taskId, columnId }) {
+function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTask, isFormTask, currentDate, onEdit, onDeleteClick, isMoving, onEditClick, onEditCancel, onDragStart, onDragEnd, taskId, columnId, columnTitle, onColumnSelect }) {
     const cardRef = useRef(null)
     const [isCardEditing, setIsCardEditing] = useState(false)
     const [cardDeadline, setCardDeadline] = useState(deadline)
@@ -11,6 +11,7 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTa
     const [isClosing, setIsClosing] = useState(false);
     const [isHovered, setIsHovered] = useState(false)
     const [isDragging, setIsDragging] = useState(false)
+    const [isColumnSelecting, setIsColumnSelecting] = useState(false)
 
     const deadlineDate = new Date(cardDeadline)
     const formattedDeadline = cardDeadline ? new Date(cardDeadline).toLocaleDateString('ru-RU') : 'Без срока';
@@ -42,7 +43,9 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTa
                 if (isCardEditing) {
                     handleEditCancel();
                 }
-
+                else if (isColumnSelecting) {
+                    handleColumnSelectionCancel()
+                }
                 else if (children && onClose) {
                     startClosing()
                 }
@@ -72,6 +75,7 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTa
 
     const handleMouseLeave = () => {
         setIsHovered(false)
+        setIsColumnSelecting(false)
     }
 
     const handleEditClick = (e) => {
@@ -101,6 +105,7 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTa
         }
     }
 
+
     const handleDragStart = (e) => {
         setIsDragging(true);
         e.dataTransfer.setData('text/plain', JSON.stringify({
@@ -128,6 +133,31 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTa
     const handleDragOver = (e) => {
         e.preventDefault();
         
+    }
+
+    const handleColumnSelectClick = () => {
+        if (!isColumnSelecting) {
+            setIsColumnSelecting(true)
+        } else {
+            setIsColumnSelecting(false)
+        }
+    }
+
+    const handleColumnSelectionCancel = () => {
+        setIsColumnSelecting(false)
+    }
+
+    const handleColumnSelect = (selectedValue) => {
+        const movingTaskData = {
+            taskId: taskId,
+            fromColumnId: columnId,
+            task: {
+                id: taskId,
+                text: cardTask,
+                deadline: cardDeadline
+            }
+        };
+        onColumnSelect(selectedValue, movingTaskData)
     }
 
     const cardClasses = [
@@ -177,6 +207,10 @@ function TaskCard({ task, deadline, children, onClose, isAddingTask, isEditingTa
                         <TaskOptions
                             onEdit={handleEditClick}
                             onDelete={onDeleteClick}
+                            onMove={handleColumnSelectClick}
+                            currentColumnTitle={columnTitle}
+                            onColumnSelecting={isColumnSelecting}
+                            onSelect={handleColumnSelect}
                         />
                     )}
                 </div>
